@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maze Solver | Path Finding Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===================== HEADER / NAVIGATION ===================== -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <div class="brand">
+        <div class="brand__logo" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div class="brand__text">
+          <h1 class="brand__title">Maze Solver</h1>
+          <p class="brand__subtitle">Path Finding Visualizer</p>
+        </div>
+      </div>
+      <span class="badge">DSA Project</span>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ===================== HERO SECTION ===================== -->
+    <section class="hero">
+      <h2 class="hero__title">Find the <span class="gradient-text">Perfect Path</span></h2>
+      <p class="hero__desc">
+        Explore how the classic path-finding algorithms BFS and DFS navigate through
+        a maze. Watch each step unfold and compare how they search, visit nodes and
+        find the route from start to end. Dijkstra and A* are coming soon.
+      </p>
+    </section>
+
+    <!-- ===================== MAIN DASHBOARD LAYOUT ===================== -->
+    <div class="dashboard">
+
+      <!-- ---------- Maze / Grid Card ---------- -->
+      <section class="card card--maze" aria-label="Maze grid">
+        <div class="card__header">
+          <h3 class="card__title">Maze Grid</h3>
+          <span class="card__hint">20 × 30 cells</span>
+        </div>
+                <div class="grid-scroll">
+          <!-- Cells are created by script.js -->
+          <div id="grid" class="grid" role="grid" aria-label="Maze"></div>
+        </div>
+        <!-- Editing help (maze editing: Member 1) -->
+        <p class="grid-help">Click or drag on the grid to draw walls &middot; drag over a wall to erase it &middot; drag <strong>S</strong> / <strong>E</strong> to move them</p>
+      </section>
+
+      <!-- ---------- Sidebar: Controls, Stats, Legend ---------- -->
+      <aside class="sidebar">
+
+        <!-- Control Panel -->
+        <section class="card" aria-label="Control panel">
+          <h3 class="card__title">Control Panel</h3>
+
+          <label class="field" for="algorithm">
+            <span class="field__label">Algorithm</span>
+            <select id="algorithm" class="select">
+              <option value="BFS">BFS</option>
+              <option value="DFS">DFS</option>
+              <option value="Dijkstra" disabled>Dijkstra (Coming Soon)</option>
+              <option value="A*" disabled>A* (Coming Soon)</option>
+            </select>
+          </label>
+
+          <div class="btn-group">
+            <button id="generateBtn" class="btn btn--secondary" type="button">Generate Maze</button>
+            <button id="solveBtn" class="btn btn--primary" type="button">Solve Maze</button>
+            <button id="clearBtn" class="btn btn--secondary" type="button">Clear Path</button>
+            <button id="resetBtn" class="btn btn--danger" type="button">Reset</button>
+            <button id="compareBtn" class="btn btn--secondary btn--compare" type="button">Compare Both</button>
+          </div>
+        </section>
+
+        <!-- Statistics -->
+        <section class="card" aria-label="Statistics">
+          <h3 class="card__title">Statistics</h3>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat__label">Algorithm</span>
+              <span id="statAlgorithm" class="stat__value">BFS</span>
+            </div>
+            <div class="stat">
+              <span class="stat__label">Path Length</span>
+              <span id="statPath" class="stat__value">--</span>
+            </div>
+            <div class="stat">
+              <span class="stat__label">Nodes Visited</span>
+              <span id="statVisited" class="stat__value">--</span>
+            </div>
+            <div class="stat">
+              <span class="stat__label">Execution Time</span>
+              <span id="statTime" class="stat__value">-- ms</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- BFS vs DFS comparison (Member 5) -->
+        <section class="card" id="comparisonCard" aria-label="BFS vs DFS comparison">
+          <h3 class="card__title">BFS vs DFS Comparison</h3>
+
+          <p id="compareEmpty" class="compare__empty">
+            Click <strong>Compare Both</strong> to run BFS and DFS on the current maze.
+          </p>
+
+          <div id="compareResults" hidden>
+            <p id="compareNotice" class="compare__notice" role="status" hidden></p>
+            <table class="compare__table">
+              <thead>
+                <tr>
+                  <th scope="col"><span class="visually-hidden">Metric</span></th>
+                  <th scope="col">BFS</th>
+                  <th scope="col">DFS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Result</th>
+                  <td id="cmpBfsResult">--</td>
+                  <td id="cmpDfsResult">--</td>
+                </tr>
+                <tr>
+                  <th scope="row">Path Length (steps)</th>
+                  <td id="cmpBfsPath">--</td>
+                  <td id="cmpDfsPath">--</td>
+                </tr>
+                <tr>
+                  <th scope="row">Nodes Visited</th>
+                  <td id="cmpBfsVisited">--</td>
+                  <td id="cmpDfsVisited">--</td>
+                </tr>
+                <tr>
+                  <th scope="row">Execution Time</th>
+                  <td id="cmpBfsTime">-- ms</td>
+                  <td id="cmpDfsTime">-- ms</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="compare__note">Both algorithms ran on the same maze snapshot. Times are in milliseconds and vary slightly between runs.</p>
+          </div>
+        </section>
+
+        <!-- Legend -->
+        <section class="card" aria-label="Legend">
+          <h3 class="card__title">Legend</h3>
+          <ul class="legend">
+            <li><span class="swatch swatch--start"></span>Start</li>
+            <li><span class="swatch swatch--end"></span>End</li>
+            <li><span class="swatch swatch--wall"></span>Wall</li>
+            <li><span class="swatch swatch--visited"></span>Visited</li>
+            <li><span class="swatch swatch--path"></span>Path</li>
+          </ul>
+        </section>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <p>Maze Solver &middot; Path Finding Visualizer &middot; Built with HTML, CSS &amp; JavaScript</p>
+  </footer>
+
+  <!-- Small message shown when a not-yet-built feature is clicked -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- type="module" is required because script.js imports maze/mazeGenerator.js -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
